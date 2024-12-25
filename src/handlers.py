@@ -2,6 +2,8 @@ from aiogram         import Router
 from aiogram.filters import CommandStart
 from aiogram.types   import Message, InlineKeyboardButton, InlineKeyboardMarkup
 
+import os
+
 router = Router()
 
 @router.message(CommandStart())
@@ -13,7 +15,7 @@ async def cmd_start(message: Message):
                 [
                     InlineKeyboardButton(
                         text="Play", 
-                        url="https://t.me/otvw_bot/test"
+                        url=os.getenv("URL", ""),
                     ),
                 ],
             ],
