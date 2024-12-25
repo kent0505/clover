@@ -1,0 +1,188 @@
+# logging.basicConfig(
+#     filename = "logfile.log",
+#     level    = logging.INFO,
+#     format   = "%(asctime)s - %(levelname)s - %(message)s",
+#     datefmt  = "%d-%m-%Y %H:%M:%S" # 29-01-2024 14:19:28,
+# )
+
+
+# def check_picked_file(file: UploadFile) -> bool:
+#     if file.filename and str(file.content_type).startswith("image/"):
+#         return True
+#     else:
+#         return False
+# def remove_image(title: str) -> None:
+#     try:
+#         os.remove("static/" + title)
+#         logging.warning("IMAGE REMOVED")
+#     except:
+#         logging.warning("IMAGE NOT FOUND")
+# def add_image(file: UploadFile) -> str:
+#     try:
+#         timestamp   = get_timestamp()                   # 1706520261
+#         format      = str(file.filename).split('.')[-1] # jpg/jpeg/png
+#         unique_name = f"{timestamp}.{format}"           # 1706520261.png
+#         file_name   = os.path.join("static", unique_name)
+#         with open(file_name, "wb") as image_file:
+#             image_file.write(file.file.read())
+#         return unique_name
+#     except Exception as e:
+#         logging.warning(e)
+#         return ""
+
+
+# main = ReplyKeyboardMarkup(
+#     keyboard=[
+#         [
+#             KeyboardButton(text="Каталог"),
+#         ],
+#         [
+#             KeyboardButton(text="Корзина"), 
+#             KeyboardButton(text="Контакты"),
+#         ],
+#     ],
+#     resize_keyboard=True, 
+#     input_field_placeholder="Aaa",
+# )
+# ikm1 = InlineKeyboardMarkup(
+#     inline_keyboard=[
+#         [
+#             InlineKeyboardButton(
+#                 text="Play", 
+#                 url="https://t.me/otvw_bot/test",
+#                 # web_app=["https://t.me/otvw_bot/test"],
+#             ),
+#         ],
+#     ],
+# )
+# ikm2 = InlineKeyboardMarkup(
+#     inline_keyboard=[
+#         [
+#             InlineKeyboardButton(text="Bbb", callback_data="Bbb"),
+#             InlineKeyboardButton(text="Ccc", callback_data="Ccc"),
+#         ],
+#     ],
+# )
+
+
+# from middlewares import TestMiddleware
+# router.message.outer_middleware(TestMiddleware())
+
+
+# from aiogram import F, Router
+# from aiogram.filters import CommandStart, Command
+# from aiogram.types import Message, CallbackQuery
+# from aiogram.fsm.state import StatesGroup, State
+# from aiogram.fsm.context import FSMContext
+# class Reg(StatesGroup):
+#     name = State()
+#     phone = State()
+# @router.message(Command("help"))
+# async def cmd_help(message: Message):
+#     await message.answer("Help")
+# @router.message(Command("register"))
+# async def register(message: Message, state: FSMContext):
+#     await state.set_state(Reg.name)
+#     await message.answer("Введите имя")
+# @router.message(Reg.name)
+# async def register_name(message: Message, state: FSMContext):
+#     await state.update_data(name=message.text)
+#     await state.set_state(Reg.phone)
+#     await message.answer("Введите номер телефона")
+# @router.message(Reg.phone)
+# async def register_phone(message: Message, state: FSMContext):
+#     await state.update_data(phone=message.text)
+#     data = await state.get_data()
+#     await message.answer(f"Имя: {data["name"]}\nТелефон: {data["phone"]}")
+#     await state.clear()
+# @router.message(F.text == "aaa")
+# async def cmd_aaa(message: Message):
+#     await message.answer("Aaa")
+# @router.callback_query(F.data == "Aaa")
+# async def instagram(callback: CallbackQuery):
+#     await callback.answer("")
+#     await callback.message.edit_reply_markup(reply_markup=kb.ikm2)
+
+
+# from aiogram import Bot, Dispatcher
+# from src.bot.handlers import router
+# import os, asyncio, logging
+# bot = Bot(token=os.getenv("TOKEN"))
+# dp = Dispatcher()
+# async def main():
+#     dp.include_router(router)
+#     await dp.start_polling(bot)
+# if __name__ == "__main__":
+#     logging.basicConfig(level=logging.INFO)
+#     try:
+#         asyncio.run(main())
+#     except KeyboardInterrupt:
+#         print("Exit")
+
+
+# from aiogram import BaseMiddleware
+# from aiogram.types import TelegramObject
+# from typing import Any, Awaitable, Callable, Dict
+# class TestMiddleware(BaseMiddleware):
+#     async def __call__(
+#         self, 
+#         handler: Callable[[TelegramObject, Dict[str, Any]], Awaitable[Any]], 
+#         event: TelegramObject, 
+#         data: Dict[str, Any]
+#     ) -> Any:
+#         # действия до обработчика 
+#         print("AAA")
+#         result = await handler(event, data)
+#         # действия после обработчика 
+#         print("BBB")
+#         return result
+
+
+# from fastapi                   import FastAPI
+# from fastapi.middleware.cors   import CORSMiddleware
+# from starlette.middleware.base import BaseHTTPMiddleware
+# from http                      import HTTPStatus
+# from src.core.settings         import settings
+# import logging
+# class LogMiddleware(BaseHTTPMiddleware):
+#     async def dispatch(self, request, call_next):
+#         response    = await call_next(request)
+#         method      = request.method                                       # POST
+#         url_path    = str(request.url).replace(str(request.base_url), '/') # /api/v1/category/
+#         status_code = response.status_code                                 # 404
+#         code_desc   = HTTPStatus(status_code).phrase                       # Not Found
+#         msg         = f"{method} {url_path} {status_code} {code_desc}"
+#         if "200 OK" in msg:
+#             logging.info(msg)
+#         else:
+#             logging.error(msg)
+#         return response
+# def setup_middlewares(app: FastAPI):
+#     # app.add_middleware(LogMiddleware)
+#     app.add_middleware(
+#         middleware_class  = CORSMiddleware,
+#         allow_origins     = settings.allow_origins,
+#         allow_credentials = True,
+#         allow_methods     = ["*"],
+#         allow_headers     = ["*"],
+#     )
+
+
+# class Category(Base):
+#     title: Mapped[str] = mapped_column(nullable=False)
+# class Product(Base):
+#     title:       Mapped[str] = mapped_column(nullable=False)
+#     description: Mapped[str] = mapped_column(nullable=False)
+#     image:       Mapped[str] = mapped_column(nullable=False) # image id
+#     price:       Mapped[int] = mapped_column(nullable=False)
+#     cid:         Mapped[int] = mapped_column(nullable=False) # category id
+# class Order(Base):
+#     amount:  Mapped[int] = mapped_column(nullable=False)
+#     date:    Mapped[int] = mapped_column(nullable=False) # timestamp
+#     uid:     Mapped[int] = mapped_column(nullable=False) # user id
+#     pid:     Mapped[int] = mapped_column(nullable=False) # product id
+#     address: Mapped[str] = mapped_column(nullable=False) # address lat and lon "41.315166, 69.243769"
+#     status:  Mapped[str] = mapped_column(nullable=False) # in progress | completed | cancelled
+#     notes:   Mapped[str] = mapped_column(nullable=False)
+# class Image(Base):
+#     url: Mapped[str] = mapped_column(nullable=False)
