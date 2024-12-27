@@ -9,5 +9,23 @@
     <title>Clover</title>
 </head>
 <body>
+    <script>
+        const tg = window.Telegram.WebApp;
+        const user = tg.initDataUnsafe?.user;
+
+        async function fetchData() {
+            try {
+                const response = await fetch(`/api/v1/user/${user.id}`);
+                const data = await response.json();
+                console.log(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        
+        if (user) {
+            fetchData();
+        }
+    </script>
 </body>
 </html>
